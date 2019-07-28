@@ -6,9 +6,14 @@ let keys = require("./keys.js");
 
 let axios = require('axios');
 
-
+let Spotify = require('node-spotify-api');
+// let spotify = new Spotify(keys.spotify);
 let subject = process.argv[2];
 let artist = process.argv[3];
+
+var spotify = new Spotify(keys.spotify);
+
+
 
 switch (subject) {
   case 'spotify-this':
@@ -25,7 +30,19 @@ switch (subject) {
 
 function doSpotify(){
 
+  
+  spotify.search({ type: 'track', query: artist }, function(err, data) {
+    if (err) {
+      return console.log('Error occurred: ' + err);
+    }
+   
+  console.log(JSON.stringify(data, null, 2));
+  console.log("Album", data.tracks.items[0].name);
+  console.log("Album", data.tracks.items[0].name);
+    
+  });
 };
+doSpotify()
 
 function doConcert(){
   let concertUrl = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
@@ -52,17 +69,7 @@ function doMovie(){
   axios.get(movieUrl)
   .then(function (response) {
     // handle success
-    console.log(`Title: ${response.data.Title}`);
-    // console.log(response.data);
-    // console.log(response.data);
-  //   * Title of the movie.
-  //  * Year the movie came out.
-  //  * IMDB Rating of the movie.
-  //  * Rotten Tomatoes Rating of the movie.
-  //  * Country where the movie was produced.
-  //  * Language of the movie.
-  //  * Plot of the movie.
-  //  * Actors in the movie.
+    console.log(`Title: ${response.data.Title} Year: ${response.data.Year} Rating: ${response.data.Ratings} Country: ${response.data.Country} Language: ${response.data.Language} Plot: ${response.data.Plot} Actors: ${response.data.Actors} `);
 
 
   })
